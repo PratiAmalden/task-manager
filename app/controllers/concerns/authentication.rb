@@ -1,9 +1,6 @@
 module Authentication
   extend ActiveSupport::Concern
 
-  included do
-    helper_method :current_user, :user_signed_in?
-  end
 
   def login(user)
     reset_session
@@ -13,11 +10,13 @@ module Authentication
 
   def logout
     reset_session
-    Current.user = nil
   end
 
   def authenticate_user!
-    redirect_to login_path, alert: "You must be logged in!" unless user_signed_in?
+    return if user_signed_in?
+    render json: {
+      message: "Unauthorized"
+      }, status: :unauthorized
   end
 
   private
