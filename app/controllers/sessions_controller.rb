@@ -1,22 +1,21 @@
 class SessionsController < ApplicationController
-  def new
-    @user = User.new
-  end
-
   def create
     user = User.authenticate_by(email: params[:email], password: params[:password])
     if user
-      login user
-      redirect_to root_path, notice: "Logged in successfully"
+      login(user)
+      render json: {
+        message: "Logged in successfully",
+        user: {
+          id: user.id, email: user.email
+        }
+        }, status: :ok
     else
-      flash.now[:alert] = "Invalid email or password"
-      render :new, status: :unprocessable_entity
+      render json: { errors: "Invalid email or password" }, status: :unauthorized
     end
   end
 
   def destroy
     logout
-    flash[:notice] = "Logged out successfully"
-    redirect_to root_path
+    render json: { message: "Logged out successfully" }, status: :ok
   end
 end
