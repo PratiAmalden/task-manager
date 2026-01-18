@@ -1,0 +1,16 @@
+<h1>Login</h1>
+<%= form_with url: session_path, local: true do |form| %>
+    <div>
+        <%= form.label :email %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email" %>
+    </div>
+
+    <div>
+        <%= form.label :password %>
+        <%= form.password_field :password, autocomplete: "current-password" %>
+    </div>
+
+    <div>
+        <%= form.submit "log in" %>
+    </div>
+<%end%>
